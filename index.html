@@ -1,0 +1,50 @@
+<!DOCTYPE html><html>
+
+<head>
+    <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Programming Project 5</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+</head>
+
+<body>
+    <h1>Select a Major</h1>
+    <button id="btn" onClick="getData('CIT')">CIT Majors</button><button id="btn" onClick="getData('BUS')">Business Majors</button>
+    <h2>We filter our dataset by major</h2>
+    <div id="result"></div>
+
+</body>
+
+<!-- Handlebars Template -->
+    <script type="text/x-handlebars-template" id="resultTemplate">
+        <table>
+        <tr><th>Name</th><th>Major</th><th>Midterm</th><th>Final</th></tr>
+        {{#each rows}}
+        <tr>
+        <td>{{name}}</td><td>{{major}}</td><td>{{midterm}}</td><td>{{final}}</td>
+        </tr>
+        {{/each}}
+        </table>
+    </script>
+
+<!-- Application ajax Code -->
+    <script>
+        async function getData(selected_major) {
+
+        var response = await fetch('cit5students.json'); // this is an ajax GET request
+        if(response.ok) {
+            var data = await response.json();
+            student_major = data.filter( (item) => item.major == selected_major );
+
+// filter data array for selected meal items
+        var templateText = document.getElementById('resultTemplate').innerHTML;
+        var compiledTemplateText = Handlebars.compile(templateText); //get and compile template code
+            compiledHtml = compiledTemplateText({ rows: student_major }) //apply data to template
+            document.getElementById('result').innerHTML = compiledHtml;
+}
+else {
+document.querySelector('#result').innerHTML = "There was an error, or menu items not found";
+}
+}
+</script>
+</html>
